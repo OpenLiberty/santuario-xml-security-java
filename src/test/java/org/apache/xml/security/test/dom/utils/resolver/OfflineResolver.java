@@ -18,15 +18,18 @@
  */
 package org.apache.xml.security.test.dom.utils.resolver;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.xml.security.signature.XMLSignatureInput;
+import org.apache.xml.security.signature.XMLSignatureFileInput;
 import org.apache.xml.security.test.XmlSecTestEnvironment;
 import org.apache.xml.security.utils.resolver.ResourceResolverContext;
 import org.apache.xml.security.utils.resolver.ResourceResolverException;
@@ -105,13 +108,7 @@ public class OfflineResolver extends ResourceResolverSpi {
                 String newURI = OfflineResolver._uriMap.get(URI);
 
                 LOG.debug("Mapped " + URI + " to " + newURI);
-
-                InputStream is = new FileInputStream(newURI);
-
-                LOG.debug("Available bytes = " + is.available());
-
-                XMLSignatureInput result = new XMLSignatureInput(is);
-
+                XMLSignatureInput result = new XMLSignatureFileInput(new File(newURI));
                 result.setSourceURI(URI);
                 result.setMIMEType(OfflineResolver._mimeMap.get(URI));
 

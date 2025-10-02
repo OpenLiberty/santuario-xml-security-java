@@ -18,7 +18,9 @@
  */
 package org.apache.xml.security.stax.ext;
 
+import java.security.AccessController;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivilegedAction;
 import java.security.SecureRandom;
 
 import javax.xml.bind.JAXBContext;
@@ -49,7 +51,7 @@ public class XMLSecurityConstants {
     static {
         try {
             SECURE_RANDOM = SecureRandom.getInstance("SHA1PRNG");
-        } catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
 
@@ -59,11 +61,11 @@ public class XMLSecurityConstants {
             throw new RuntimeException(e);
         }
 
-        xmlOutputFactory = XMLOutputFactory.newInstance();
-        xmlOutputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
+                xmlOutputFactory = XMLOutputFactory.newInstance();
+                xmlOutputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
 
-        xmlOutputFactoryNonRepairingNs = XMLOutputFactory.newInstance();
-        xmlOutputFactoryNonRepairingNs.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, false);
+                xmlOutputFactoryNonRepairingNs = XMLOutputFactory.newInstance();
+                xmlOutputFactoryNonRepairingNs.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, false);
     }
 
     protected XMLSecurityConstants() {
@@ -123,7 +125,7 @@ public class XMLSecurityConstants {
     public static final String NS_XMLENC = "http://www.w3.org/2001/04/xmlenc#";
     public static final String NS_XMLENC11 = "http://www.w3.org/2009/xmlenc11#";
     public static final String NS_DSIG = "http://www.w3.org/2000/09/xmldsig#";
-    public static final String NS_DSIG_MORE ="http://www.w3.org/2001/04/xmldsig-more#";
+    public static final String NS_DSIG_MORE = "http://www.w3.org/2001/04/xmldsig-more#";
     public static final String NS_DSIG_MORE_2007_05 = "http://www.w3.org/2007/05/xmldsig-more#";
     public static final String NS_DSIG11 = "http://www.w3.org/2009/xmldsig11#";
     public static final String NS_WSSE11 = "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd";
