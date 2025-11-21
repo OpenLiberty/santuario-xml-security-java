@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
  *
  * This <code>Transform</code>(Factory) class acts as the Factory and Proxy of
  * the implementing class that supports the functionality of <a
- * href=http://www.w3.org/TR/xmldsig-core/#sec-TransformAlg>a Transform
+ * href=https://www.w3.org/TR/xmldsig-core/#sec-TransformAlg>a Transform
  * algorithm</a>.
  * Implements the Factory and Proxy pattern for ds:Transform algorithms.
  *

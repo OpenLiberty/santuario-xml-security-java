@@ -29,6 +29,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.xml.security.signature.XMLSignature;
+import org.apache.xml.security.signature.XMLSignatureFileInput;
 import org.apache.xml.security.signature.XMLSignatureInput;
 import org.apache.xml.security.test.dom.DSNamespaceContext;
 import org.apache.xml.security.utils.XMLUtils;
@@ -114,10 +115,7 @@ public class ProcessingInstructionTest {
             throws ResourceResolverException {
             try {
                 URI uriNew = getNewURI(context.uriToResolve, context.baseUri);
-
-                FileInputStream inputStream = new FileInputStream(new File(dir, "out.xml"));
-                XMLSignatureInput result = new XMLSignatureInput(inputStream);
-
+                XMLSignatureInput result = new XMLSignatureFileInput(resolveFile(dir.toPath(), "out.xml"));
                 result.setSourceURI(uriNew.toString());
 
                 return result;

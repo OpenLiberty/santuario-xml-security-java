@@ -154,8 +154,10 @@ public class XMLEncryptOutputProcessor extends AbstractEncryptOutputProcessor {
                         createStartElementAndOutputAsEvent(outputProcessorChain, XMLSecurityConstants.TAG_xenc_EncryptionMethod, false, attributes);
 
                         final String encryptionKeyTransportDigestAlgorithm = getSecurityProperties().getEncryptionKeyTransportDigestAlgorithm();
-                        final String encryptionKeyTransportMGFAlgorithm = getSecurityProperties().getEncryptionKeyTransportMGFAlgorithm();
-
+						// Liberty Change Start: Backport 4.x 
+                        final String encryptionKeyTransportMGFAlgorithm = XMLSecurityConstants.NS_XENC_RSAOAEPMGF1P.equals(encryptionKeyTransportAlgorithm)?
+                                null : getSecurityProperties().getEncryptionKeyTransportMGFAlgorithm();
+						// Liberty Change End
                         if (XMLSecurityConstants.NS_XENC11_RSAOAEP.equals(encryptionKeyTransportAlgorithm) ||
                                 XMLSecurityConstants.NS_XENC_RSAOAEPMGF1P.equals(encryptionKeyTransportAlgorithm)) {
 
@@ -214,7 +216,9 @@ public class XMLEncryptOutputProcessor extends AbstractEncryptOutputProcessor {
                                 }
 
                                 MGF1ParameterSpec mgfParameterSpec = new MGF1ParameterSpec("SHA-1");
-                                if (encryptionKeyTransportMGFAlgorithm != null) {
+                                // Check for RSA-OAEP then MGF1 is set by default and value must not be set!
+                                if (encryptionKeyTransportMGFAlgorithm != null
+                                    && !XMLSecurityConstants.NS_XENC_RSAOAEPMGF1P.equals(encryptionKeyTransportAlgorithm)) {
                                     String jceMGFAlgorithm = JCEMapper.translateURItoJCEID(encryptionKeyTransportMGFAlgorithm);
                                     mgfParameterSpec = new MGF1ParameterSpec(jceMGFAlgorithm);
                                 }

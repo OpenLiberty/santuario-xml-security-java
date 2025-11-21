@@ -31,6 +31,8 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.xml.security.signature.XMLSignatureInput;
+import org.apache.xml.security.signature.XMLSignatureNodeInput;
+import org.apache.xml.security.signature.XMLSignatureNodeSetInput;
 import org.apache.xml.security.test.dom.DSNamespaceContext;
 import org.apache.xml.security.utils.resolver.ResourceResolverContext;
 import org.apache.xml.security.utils.resolver.ResourceResolverException;
@@ -38,13 +40,14 @@ import org.apache.xml.security.utils.resolver.ResourceResolverSpi;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * An implementation of a resource resolver, which evaluates xpointer expressions.
  *
  */
 public class XPointerResourceResolver extends ResourceResolverSpi {
-    private static final org.slf4j.Logger LOG =
-        org.slf4j.LoggerFactory.getLogger(XPointerResourceResolver.class);
+
 
     private static final String XP_OPEN = "xpointer(";
     private static final String XNS_OPEN = "xmlns(";
@@ -69,12 +72,13 @@ public class XPointerResourceResolver extends ResourceResolverSpi {
 
         String xpURI;
         try {
-            xpURI = URLDecoder.decode(v, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            LOG.warn("utf-8 not a valid encoding",e);
-            return false;
-        }
+            xpURI = URLDecoder.decode(v, "UTF_8");
 
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            xpURI = null;
+            e.printStackTrace();
+        }
         String[] parts = xpURI.substring(1).split("\\s");
 
         // plain ID reference.
@@ -93,9 +97,6 @@ public class XPointerResourceResolver extends ResourceResolverSpi {
             return false;
         }
 
-        LOG.debug("xpURI = " + xpURI);
-        LOG.debug("BaseURI = " + context.baseUri);
-
         return true;
     }
 
@@ -112,7 +113,6 @@ public class XPointerResourceResolver extends ResourceResolverSpi {
         try {
             xpURI = URLDecoder.decode(v, "utf-8");
         } catch (UnsupportedEncodingException e) {
-            LOG.warn("utf-8 not a valid encoding ", e);
             return null;
         }
 
@@ -178,10 +178,9 @@ public class XPointerResourceResolver extends ResourceResolverSpi {
                 }
             }
 
-            XMLSignatureInput result = null;
-
+            final XMLSignatureInput result;
             if (node != null) {
-                result = new XMLSignatureInput(node);
+                result = new XMLSignatureNodeInput(node);
             } else if (nodes != null) {
                 Set<Node> nodeSet = new HashSet<>(nodes.getLength());
 
@@ -189,7 +188,7 @@ public class XPointerResourceResolver extends ResourceResolverSpi {
                     nodeSet.add(nodes.item(j));
                 }
 
-                result = new XMLSignatureInput(nodeSet);
+                result = new XMLSignatureNodeSetInput(nodeSet);
             } else {
                 return null;
             }

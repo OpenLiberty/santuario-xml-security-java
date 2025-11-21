@@ -34,6 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xml.security.signature.XMLSignatureInput;
+import org.apache.xml.security.signature.XMLSignatureDigestInput;
 import org.apache.xml.security.test.XmlSecTestEnvironment;
 import org.apache.xml.security.test.dom.TestUtils;
 import org.apache.xml.security.transforms.TransformationException;
@@ -202,7 +203,7 @@ public class PreCalculatedDigestSignatureTest {
         @Override
         public XMLSignatureInput engineResolveURI(ResourceResolverContext context) throws ResourceResolverException {
             String documentUri = extractDocumentUri(context);
-            XMLSignatureInput result = new XMLSignatureInput(preCalculatedDigest);
+            XMLSignatureInput result = new XMLSignatureDigestInput(preCalculatedDigest);
             result.setSourceURI(documentUri);
             result.setMIMEType("text/plain");
             return result;

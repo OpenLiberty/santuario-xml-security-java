@@ -47,6 +47,14 @@ public class VersionTest {
 
         version = convertVersion("1.4");
         assertEquals("1.4", version);
+        
+        // Liberty Change
+        // Test that micro versions are handled properly
+        version = convertVersion("2.3.6.1");
+        assertEquals("2.361", version);
+        
+        version = convertVersion("2.3.6.1-SNAPSHOT");
+        assertEquals("2.361", version);
     }
 
     @Test
@@ -74,7 +82,7 @@ public class VersionTest {
     /**
      * Convert the version to a number that can be parsed to a double.
      * Namely, remove the "-SNAPSHOT" from the end, and convert version
-     * numbers like 1.4.4 to 1.44.
+     * numbers like 1.4.4 to 1.44 or 2.3.6.1 to 2.361.
      */
     private String convertVersion(String version) {
 
@@ -84,12 +92,21 @@ public class VersionTest {
             version = version.substring(0, dash);
         }
 
-        // Remove the second decimal point if it exists
-        int lastDot = version.lastIndexOf('.');
-        if (version.indexOf('.') != lastDot) {
-            String prefix = version.substring(0, lastDot);
-            String suffix = version.substring(lastDot + 1, version.length());
-            version = prefix.concat(suffix);
+        // Keep only the first decimal point, remove all others
+        int firstDot = version.indexOf('.');
+        if (firstDot != -1) {
+            StringBuilder result = new StringBuilder();
+            result.append(version.substring(0, firstDot + 1)); // Include the first dot
+            
+            // Append all remaining digits without any dots
+            for (int i = firstDot + 1; i < version.length(); i++) {
+                char c = version.charAt(i);
+                if (c != '.') {
+                    result.append(c);
+                }
+            }
+            
+            version = result.toString();
         }
 
         return version;
