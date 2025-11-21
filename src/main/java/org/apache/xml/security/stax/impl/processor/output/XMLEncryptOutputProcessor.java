@@ -155,9 +155,6 @@ public class XMLEncryptOutputProcessor extends AbstractEncryptOutputProcessor {
 
                         final String encryptionKeyTransportDigestAlgorithm = getSecurityProperties().getEncryptionKeyTransportDigestAlgorithm();
 						// Liberty Change Start: Backport 4.x 
-						// TODO: do a fips check for this code
-						// final String encryptionKeyTransportMGFAlgorithm = getSecurityProperties().getEncryptionKeyTransportMGFAlgorithm();
-                        // Check for rsa-oaep-mgf1p then MGF1 is set by default and encryptionKeyTransportMGFAlgorithm must not be set!
                         final String encryptionKeyTransportMGFAlgorithm = XMLSecurityConstants.NS_XENC_RSAOAEPMGF1P.equals(encryptionKeyTransportAlgorithm)?
                                 null : getSecurityProperties().getEncryptionKeyTransportMGFAlgorithm();
 						// Liberty Change End

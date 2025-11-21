@@ -21,6 +21,7 @@ package org.apache.xml.security.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -34,6 +35,8 @@ public final class XmlSecTestEnvironment {
 
     /** Password to the {@link KeyStore} returned by {@link #getTestKeyStore()} */
     public static final String TEST_KS_PASSWORD = "changeit";
+    /** Password to the {@link KeyStore} returned by {@link #getTransmitterKeyStore()} */
+    public static final String TRANSMITTER_KS_PASSWORD = "default";
 
     private static final Path BASEDIR = Paths.get(System.getProperty("basedir", ".")).toAbsolutePath();
 
@@ -54,6 +57,20 @@ public final class XmlSecTestEnvironment {
          }
          return ks;
      }
+
+
+    /**
+     * @return {@link KeyStore} loaded from transmitter.jks
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
+    public static KeyStore getTransmitterKeyStore() throws GeneralSecurityException, IOException {
+        KeyStore ks = KeyStore.getInstance("jks");
+        try (InputStream is = XmlSecTestEnvironment.class.getClassLoader().getResourceAsStream("transmitter.jks")) {
+            ks.load(is, TRANSMITTER_KS_PASSWORD.toCharArray());
+        }
+        return ks;
+    }
 
 
      /**
